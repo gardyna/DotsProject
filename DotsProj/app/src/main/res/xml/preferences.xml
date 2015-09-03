@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:title="Sound on/off"
+        android:summary="Have game tuens on while playing"
+        android:key="sound"
+        android:defaultValue="true"/>
+    <ListPreference
+        android:title="Fjöldi punkta"
+        android:summary="Fjöldi punkta á skjá"
+        android:key="dotsCount"
+        android:defaultValue="6"
+        android:entries="@array/listArray"
+        android:entryValues="@array/listValues"/>
+</PreferenceScreen>
