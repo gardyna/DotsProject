@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class HiscoreActivity extends AppCompatActivity {
 
@@ -19,6 +20,7 @@ public class HiscoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hiscore);
         TinyDB db = new TinyDB(this);
         scores = db.getListInt("Scores");
+        Collections.sort(scores, Collections.reverseOrder());
         ListView v = (ListView)findViewById(R.id.scoreList);
         ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, scores);
         v.setAdapter(adapter);
