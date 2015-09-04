@@ -1,9 +1,15 @@
 package com.ru.dots.dotsproj;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -33,5 +39,14 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void GoToScores(View v){
+        Intent i = new Intent(this, HiscoreActivity.class);
+        // set temporary dummy data
+        TinyDB db = new TinyDB(this);
+        db.putListInt("Scores", new ArrayList<Integer>(Arrays.asList(10, 20, 30, 40 , 50)));
+        // start activity
+        startActivity(i);
     }
 }

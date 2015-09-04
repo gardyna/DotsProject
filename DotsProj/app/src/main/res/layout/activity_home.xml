@@ -22,7 +22,8 @@
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:text="@string/high_score"/>
+        android:text="@string/high_score"
+        android:onClick="GoToScores"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

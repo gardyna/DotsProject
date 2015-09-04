@@ -4,13 +4,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class HiscoreActivity extends AppCompatActivity {
+
+    private ArrayList<Integer> scores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hiscore);
+        TinyDB db = new TinyDB(this);
+        scores = db.getListInt("Scores");
+        ListView v = (ListView)findViewById(R.id.scoreList);
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, scores);
+        v.setAdapter(adapter);
     }
 
     @Override
