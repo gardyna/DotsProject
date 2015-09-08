@@ -19,7 +19,7 @@ public class HomeActivity extends AppCompatActivity {
     private Vibrator m_vibrator;
     private Boolean m_use_vibrator = false;
     private Boolean m_have_sound = false;
-    private int m_dotsCount = 6;
+
     SharedPreferences m_sp;
 
 
@@ -31,13 +31,16 @@ public class HomeActivity extends AppCompatActivity {
         m_sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         m_use_vibrator = m_sp.getBoolean("vibrate", false);
         m_have_sound = m_sp.getBoolean("sound", false);
-        //m_dotsCount = m_sp.getInt("dotsCount", 6);
+
+
     }
+
 
     @Override
     protected void onStart() {
         super.onStart();
         m_use_vibrator = m_sp.getBoolean("vibrate", false);
+
     }
 
     @Override
@@ -75,6 +78,11 @@ public class HomeActivity extends AppCompatActivity {
 
     public void viewSettings(View v){
         Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
+    }
+
+    public void viewGame(View v){
+        Intent i = new Intent(this, GameActivity.class);
         startActivity(i);
     }
 }

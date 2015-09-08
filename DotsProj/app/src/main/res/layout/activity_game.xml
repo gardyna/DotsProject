@@ -13,7 +13,7 @@
     <com.ru.dots.dotsproj.BoardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#A0E0A0"
+        android:background="#FFFFFF"
         android:padding="10pt"
         android:layout_margin="10pt"/>
 
