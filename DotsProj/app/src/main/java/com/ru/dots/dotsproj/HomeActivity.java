@@ -31,7 +31,7 @@ public class HomeActivity extends AppCompatActivity {
         m_sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         m_use_vibrator = m_sp.getBoolean("vibrate", false);
         m_have_sound = m_sp.getBoolean("sound", false);
-        m_dotsCount = m_sp.getInt("dotsCount", 6);
+        //m_dotsCount = m_sp.getInt("dotsCount", 6);
     }
 
     @Override
