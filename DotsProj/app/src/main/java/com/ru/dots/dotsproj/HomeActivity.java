@@ -1,7 +1,10 @@
 package com.ru.dots.dotsproj;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,10 +16,31 @@ import java.util.Arrays;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private Vibrator m_vibrator;
+    private Boolean m_use_vibrator = false;
+    private Boolean m_have_sound = false;
+
+    SharedPreferences m_sp;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        m_vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        m_sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        m_use_vibrator = m_sp.getBoolean("vibrate", false);
+        m_have_sound = m_sp.getBoolean("sound", false);
+
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        m_use_vibrator = m_sp.getBoolean("vibrate", false);
+
     }
 
     @Override
@@ -35,6 +59,8 @@ public class HomeActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -50,7 +76,12 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void GoToGame(View v){
+    public void viewSettings(View v){
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
+    }
+
+    public void viewGame(View v){
         Intent i = new Intent(this, GameActivity.class);
         startActivity(i);
     }

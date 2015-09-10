@@ -1,8 +1,8 @@
 package com.ru.dots.dotsproj;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,11 +10,10 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.AnimationDrawable;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,21 +27,24 @@ public class BoardView extends View {
     private List<Point> m_cellPath = new ArrayList<Point>();
     private Path m_path = new Path();
     private Paint m_paintPath = new Paint();
-
+    private List<Integer> m_colors = new ArrayList<Integer>(); // Halda utan um litina
     ValueAnimator animator = new ValueAnimator();
 
-    private final int NUM_CELL = 6;
+    private int NUM_CELL;
     private RectF m_circle = new RectF();
     private Paint m_paint_circle = new Paint();
 
+    SharedPreferences sp;
+
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setColorArray();
         m_paint.setColor(Color.BLACK);
         m_paint.setStyle(Paint.Style.FILL_AND_STROKE);
         m_paint.setStrokeWidth(2);
         m_paint.setAntiAlias(true);
 
-        m_paint_circle.setColor(Color.RED);
+        m_paint_circle.setColor(m_colors.get(0));
         m_paint_circle.setStyle(Paint.Style.FILL_AND_STROKE);
         m_paint_circle.setAntiAlias(true);
 
@@ -50,8 +52,11 @@ public class BoardView extends View {
         m_paintPath.setStrokeWidth(10.0f);
         m_paintPath.setStyle(Paint.Style.STROKE);
         m_paintPath.setAntiAlias(true);
-    }
 
+        //Sækja úr preference hvað grid-ið á að vera stórt
+        sp = PreferenceManager.getDefaultSharedPreferences(context);
+        NUM_CELL = Integer.parseInt(sp.getString(SettingsActivity.DOTSCOUNT, "6"));
+    }
 
 
     @Override
@@ -188,4 +193,15 @@ public class BoardView extends View {
 
         animator.start();
     }
+
+    // Er með array sem heldur utan um litina
+    // Er ekki viss hvort við viljum gera þetta svona
+    private void setColorArray(){
+        m_colors.add(Color.YELLOW);
+        m_colors.add(Color.RED);
+        m_colors.add(Color.GREEN);
+        m_colors.add(Color.BLUE);
+        m_colors.add(Color.MAGENTA);
+    }
+
 }
