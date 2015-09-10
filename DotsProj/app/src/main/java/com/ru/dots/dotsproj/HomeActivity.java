@@ -49,4 +49,9 @@ public class HomeActivity extends AppCompatActivity {
         // start activity
         startActivity(i);
     }
+
+    public void GoToGame(View v){
+        Intent i = new Intent(this, GameActivity.class);
+        startActivity(i);
+    }
 }

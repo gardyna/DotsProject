@@ -23,7 +23,7 @@ public class BoardView extends View {
     private boolean m_moving;
     private int m_cell_height;
     private int m_cell_width;
-    private Rect m_rect = new Rect();
+    private RectF m_rect = new RectF();
     private Paint m_paint = new Paint();
     private List<Point> m_cellPath = new ArrayList<Point>();
     private Path m_path = new Path();
@@ -38,7 +38,7 @@ public class BoardView extends View {
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         m_paint.setColor(Color.BLACK);
-        m_paint.setStyle(Paint.Style.STROKE);
+        m_paint.setStyle(Paint.Style.FILL_AND_STROKE);
         m_paint.setStrokeWidth(2);
         m_paint.setAntiAlias(true);
 
@@ -80,15 +80,15 @@ public class BoardView extends View {
 
     @Override
     protected void onDraw(Canvas canvas ) {
-        canvas.drawRect(m_rect, m_paint);
+        //canvas.drawRect(m_rect, m_paint);
         for (int row = 0; row < NUM_CELL; ++row){
             for (int col = 0; col < NUM_CELL; ++col){
                 int x = col * m_cell_width;
                 int y =  row * m_cell_height;
                 m_rect.set(x, y, x + m_cell_width, y + m_cell_height);
                 m_rect.offset(getPaddingLeft(), getPaddingTop());
-                canvas.drawRect(m_rect, m_paint);
-                canvas.drawOval(m_circle, m_paint_circle);
+                canvas.drawOval(m_rect, m_paint);
+                //canvas.drawOval(m_circle, m_paint_circle);
             }
         }
 
@@ -104,7 +104,7 @@ public class BoardView extends View {
         }
 
 
-        canvas.drawOval(m_circle, m_paint_circle);
+        //canvas.drawOval(m_circle, m_paint_circle);
     }
 
     private int xToCol(int x){
@@ -146,14 +146,8 @@ public class BoardView extends View {
         y = Math.max(getPaddingTop(), Math.min(y, yMax - (int) m_circle.height()));
 
         if (event.getAction() == MotionEvent.ACTION_DOWN){
-            if (m_circle.contains(x, y)){
-                m_moving = true;
-                m_cellPath.add(new Point(xToCol(x), yToRow(y)));
-            }else {
-                animateMovement(m_circle.left, m_circle.top,
-                        x - m_circle.width() / 2, y - m_circle.height() / 2);
-                invalidate();
-            }
+            m_moving = true;
+            m_cellPath.add(new Point(xToCol(x), yToRow(y)));
         }else if (event.getAction() == MotionEvent.ACTION_MOVE){
             if (m_moving){
                 if (!m_cellPath.isEmpty()){
