@@ -1,5 +1,8 @@
 package com.ru.dots.dotsproj;
 
+// TODO: set date along with score
+// TODO: two lists one for each board size
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;

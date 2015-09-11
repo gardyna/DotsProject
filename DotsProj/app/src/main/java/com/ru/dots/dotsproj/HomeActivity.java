@@ -13,6 +13,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -31,6 +33,11 @@ public class HomeActivity extends AppCompatActivity {
         m_sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         m_use_vibrator = m_sp.getBoolean("vibrate", false);
         m_have_sound = m_sp.getBoolean("sound", false);
+        TinyDB db = new TinyDB(this);
+        List<Integer> scores =db.getListInt("Scores");
+        if ( scores == null || scores.isEmpty()){
+            db.putListInt("Scores", new ArrayList<Integer>(Arrays.asList(10, 20, 30, 40 , 50)));
+        }
 
 
     }
@@ -69,9 +76,6 @@ public class HomeActivity extends AppCompatActivity {
 
     public void GoToScores(View v){
         Intent i = new Intent(this, HiscoreActivity.class);
-        // set temporary dummy data
-        TinyDB db = new TinyDB(this);
-        db.putListInt("Scores", new ArrayList<Integer>(Arrays.asList(10, 20, 30, 40 , 50)));
         // start activity
         startActivity(i);
     }

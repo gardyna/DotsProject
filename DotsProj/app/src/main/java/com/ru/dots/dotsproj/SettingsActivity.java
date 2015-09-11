@@ -1,5 +1,7 @@
 package com.ru.dots.dotsproj;
 
+// TODO: reset high score option ( + alert)
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;

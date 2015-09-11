@@ -62,7 +62,6 @@ public class TinyDB {
             bitmapFromPath = BitmapFactory.decodeFile(path);
 
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
         }
 

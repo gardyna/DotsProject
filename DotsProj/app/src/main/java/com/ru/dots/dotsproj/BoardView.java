@@ -1,7 +1,9 @@
 package com.ru.dots.dotsproj;
 
+
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -170,6 +172,7 @@ public class BoardView extends View {
             m_moving = true;
             m_cellPath.add(new Point(xToCol(x), yToRow(y)));
         }else if (event.getAction() == MotionEvent.ACTION_MOVE){
+            // TODO: sound on new item in path (higher pitch with longer path)
             if (m_moving){
                 if (!m_cellPath.isEmpty()){
                     int col = xToCol(x);
@@ -188,6 +191,7 @@ public class BoardView extends View {
                 invalidate();
             }
         }else if (event.getAction() == MotionEvent.ACTION_UP) {
+            // TODO: vibrate on succesful move (if prefrence set)
             m_movesLeft--;
             m_moving = false;
             snapToGrid(m_circle);
@@ -211,6 +215,14 @@ public class BoardView extends View {
             }
             m_cellPath.clear();
             invalidate();
+            if (m_movesLeft == 0){
+                TinyDB db = new TinyDB(getContext());
+                ArrayList<Integer> scores = db.getListInt("Scores");
+                scores.add(m_score);
+                db.putListInt("Scores", scores);
+                Intent i = new Intent(getContext(), HomeActivity.class);
+                getContext().startActivity(i);
+            }
         }
 
         return true;
