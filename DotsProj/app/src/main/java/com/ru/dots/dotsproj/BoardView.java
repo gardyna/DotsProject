@@ -194,15 +194,19 @@ public class BoardView extends View {
             // count scores here
             Point curr = new Point();
             Random r = new Random();
-            for (int row = NUM_CELL-1; row >= 0; --row){
-                for (int col = NUM_CELL-1; col >= 0; --col){
+            for (int col = NUM_CELL-1; col >= 0; --col){
+                int removed = 0;
+                for (int row = NUM_CELL-1; row >= 0; --row){
                     curr.x = col;
                     curr.y = row;
                     if (m_cellPath.contains(curr)){
                         m_points.get(col).remove(row);
-                        m_points.get(col).add(m_colors.get(r.nextInt(m_colors.size() - 1)));
+                        removed++;
                         score++;
                     }
+                }
+                for (int i = 0; i<removed; ++i){
+                    m_points.get(col).add(0, m_colors.get(r.nextInt(m_colors.size() - 1)));
                 }
             }
             m_cellPath.clear();
