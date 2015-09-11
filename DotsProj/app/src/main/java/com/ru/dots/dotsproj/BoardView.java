@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -29,7 +30,7 @@ public class BoardView extends View {
     private Path m_path = new Path();
     private Paint m_paintPath = new Paint();
     private List<Integer> m_colors = new ArrayList<Integer>(); // Halda utan um litina
-    private Integer[][] m_points; // two dim array to hold point colors
+    private List<ArrayList<Integer>> m_points = new ArrayList<ArrayList<Integer>>(); // two dim array to hold point colors
     ValueAnimator animator = new ValueAnimator();
 
     private int NUM_CELL;
@@ -59,12 +60,14 @@ public class BoardView extends View {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
         NUM_CELL = Integer.parseInt(sp.getString(SettingsActivity.DOTSCOUNT, "6"));
         // create points
-        m_points = new Integer[NUM_CELL][NUM_CELL];
         //initialize colors
         Random r = new Random();
         for (int i = 0; i < NUM_CELL; ++i){
+            System.out.println(i);
+            m_points.add(new ArrayList<Integer>());
             for (int j = 0; j < NUM_CELL; ++j){
-                m_points[i][j] = m_colors.get(r.nextInt(m_colors.size()-1));
+                System.out.println(j);
+                m_points.get(i).add(j, m_colors.get(r.nextInt(m_colors.size() - 1)));
             }
         }
     }
@@ -101,7 +104,7 @@ public class BoardView extends View {
                 m_rect.set(x, y, x + m_cell_width, y + m_cell_height);
                 m_rect.offset(getPaddingLeft(), getPaddingTop());
                 m_rect.inset(m_cell_width * 0.1f, m_cell_height * 0.1f);
-                m_paint.setColor(m_points[col][row]);
+                m_paint.setColor(m_points.get(col).get(row));
                 canvas.drawOval(m_rect, m_paint);
             }
         }
@@ -170,7 +173,8 @@ public class BoardView extends View {
                     Point last = m_cellPath.get(m_cellPath.size() - 1);
                     int dx = Math.abs(col - last.x);
                     int dy = Math.abs(row - last.y);
-                    if ((col != last.x || row != last.y) && m_points[last.x][last.y] == m_points[col][row]
+                    System.out.print(col);
+                    if ((col != last.x || row != last.y) && m_points.get(last.x).get(last.y).compareTo(m_points.get(col).get(row)) == 0
                             && (Math.abs(col - last.x) == 1 || Math.abs(row - last.y) == 1)
                             && dx <= 1 && dy <= 1 && dx != dy
                             && !PointInPath(col, row)){
@@ -183,7 +187,10 @@ public class BoardView extends View {
         }else if (event.getAction() == MotionEvent.ACTION_UP) {
             m_moving = false;
             snapToGrid(m_circle);
+            // count scores here
             m_cellPath.clear();
+
+            // shift m_points
             invalidate();
         }
 
