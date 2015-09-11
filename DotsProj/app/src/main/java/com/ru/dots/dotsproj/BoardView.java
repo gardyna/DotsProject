@@ -1,8 +1,6 @@
 package com.ru.dots.dotsproj;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
-import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -10,9 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -39,7 +35,8 @@ public class BoardView extends View {
     private int NUM_CELL;
     private RectF m_circle = new RectF();
     private Paint m_paint_circle = new Paint();
-    private Integer score = 0;
+    private Integer m_score = 0;
+    private Integer m_movesLeft = 30;
 
     SharedPreferences sp;
 
@@ -125,8 +122,10 @@ public class BoardView extends View {
             canvas.drawPath(m_path, m_paintPath);
         }
         View p = (View)getParent();
-        TextView tv = (TextView)p.findViewById(R.id.currScore);
-        tv.setText("Score: " + score.toString());
+        TextView score = (TextView)p.findViewById(R.id.currScore);
+        TextView movesLeft = (TextView)p.findViewById(R.id.movesLeft);
+        movesLeft.setText("Moves: " + m_movesLeft.toString());
+        score.setText("Score: " + m_score.toString());
     }
 
     private int xToCol(int x){
@@ -189,6 +188,7 @@ public class BoardView extends View {
                 invalidate();
             }
         }else if (event.getAction() == MotionEvent.ACTION_UP) {
+            m_movesLeft--;
             m_moving = false;
             snapToGrid(m_circle);
             // count scores here
@@ -202,7 +202,7 @@ public class BoardView extends View {
                     if (m_cellPath.contains(curr)){
                         m_points.get(col).remove(row);
                         removed++;
-                        score++;
+                        m_score++;
                     }
                 }
                 for (int i = 0; i<removed; ++i){
