@@ -17,6 +17,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class BoardView extends View {
     private boolean m_moving;
@@ -28,6 +29,7 @@ public class BoardView extends View {
     private Path m_path = new Path();
     private Paint m_paintPath = new Paint();
     private List<Integer> m_colors = new ArrayList<Integer>(); // Halda utan um litina
+    private Integer[][] m_points; // two dim array to hold point colors
     ValueAnimator animator = new ValueAnimator();
 
     private int NUM_CELL;
@@ -56,6 +58,15 @@ public class BoardView extends View {
         //Sækja úr preference hvað grid-ið á að vera stórt
         sp = PreferenceManager.getDefaultSharedPreferences(context);
         NUM_CELL = Integer.parseInt(sp.getString(SettingsActivity.DOTSCOUNT, "6"));
+        // create points
+        m_points = new Integer[NUM_CELL][NUM_CELL];
+        //initialize colors
+        Random r = new Random();
+        for (int i = 0; i < NUM_CELL; ++i){
+            for (int j = 0; j < NUM_CELL; ++j){
+                m_points[i][j] = m_colors.get(r.nextInt(m_colors.size()-1));
+            }
+        }
     }
 
 
@@ -92,6 +103,8 @@ public class BoardView extends View {
                 int y =  row * m_cell_height;
                 m_rect.set(x, y, x + m_cell_width, y + m_cell_height);
                 m_rect.offset(getPaddingLeft(), getPaddingTop());
+                m_rect.inset(m_cell_width * 0.1f, m_cell_height * 0.1f);
+                m_paint.setColor(m_points[row][col]);
                 canvas.drawOval(m_rect, m_paint);
                 //canvas.drawOval(m_circle, m_paint_circle);
             }
