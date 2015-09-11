@@ -84,8 +84,6 @@ public class BoardView extends View {
     protected void onSizeChanged( int xNew, int yNew, int xOld, int yOld ) {
         int   boardWidth = (xNew - getPaddingLeft() - getPaddingRight());
         int   boardHeight = (yNew - getPaddingTop() - getPaddingBottom());
-        //m_rect.set(0, 0, boardWidth, boardHeight );
-        //m_rect.offset( getPaddingLeft(), getPaddingTop());
         m_cell_width = boardWidth / NUM_CELL;
         m_cell_height = boardHeight / NUM_CELL;
 
@@ -96,7 +94,6 @@ public class BoardView extends View {
 
     @Override
     protected void onDraw(Canvas canvas ) {
-        //canvas.drawRect(m_rect, m_paint);
         for (int row = 0; row < NUM_CELL; ++row){
             for (int col = 0; col < NUM_CELL; ++col){
                 int x = col * m_cell_width;
@@ -104,9 +101,8 @@ public class BoardView extends View {
                 m_rect.set(x, y, x + m_cell_width, y + m_cell_height);
                 m_rect.offset(getPaddingLeft(), getPaddingTop());
                 m_rect.inset(m_cell_width * 0.1f, m_cell_height * 0.1f);
-                m_paint.setColor(m_points[row][col]);
+                m_paint.setColor(m_points[col][row]);
                 canvas.drawOval(m_rect, m_paint);
-                //canvas.drawOval(m_circle, m_paint_circle);
             }
         }
 
@@ -171,8 +167,13 @@ public class BoardView extends View {
                 if (!m_cellPath.isEmpty()){
                     int col = xToCol(x);
                     int row = yToRow(y);
-                    Point last = m_cellPath.get(m_cellPath.size()-1);
-                    if (col != last.x || row != last.y){
+                    Point last = m_cellPath.get(m_cellPath.size() - 1);
+                    int dx = Math.abs(col - last.x);
+                    int dy = Math.abs(row - last.y);
+                    if ((col != last.x || row != last.y) && m_points[last.x][last.y] == m_points[col][row]
+                            && (Math.abs(col - last.x) == 1 || Math.abs(row - last.y) == 1)
+                            && dx <= 1 && dy <= 1 && dx != dy
+                            && !PointInPath(col, row)){
                         m_cellPath.add(new Point(col, row));
                     }
                 }
@@ -187,6 +188,16 @@ public class BoardView extends View {
         }
 
         return true;
+    }
+
+    private boolean PointInPath(int col, int row){
+        for (int i = 0; i < m_cellPath.size(); ++i) {
+            Point curr = m_cellPath.get(i);
+            if (col == curr.x && row == curr.y){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void animateMovement(final float xs, final float ys, final float xt, final float yt){
