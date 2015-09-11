@@ -1,6 +1,8 @@
 package com.ru.dots.dotsproj;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -15,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +39,13 @@ public class BoardView extends View {
     private int NUM_CELL;
     private RectF m_circle = new RectF();
     private Paint m_paint_circle = new Paint();
+    private Integer score = 0;
 
     SharedPreferences sp;
 
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         setColorArray();
         m_paint.setColor(Color.BLACK);
         m_paint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -119,9 +124,9 @@ public class BoardView extends View {
             }
             canvas.drawPath(m_path, m_paintPath);
         }
-
-
-        //canvas.drawOval(m_circle, m_paint_circle);
+        View p = (View)getParent();
+        TextView tv = (TextView)p.findViewById(R.id.currScore);
+        tv.setText("Score: " + score.toString());
     }
 
     private int xToCol(int x){
@@ -176,8 +181,7 @@ public class BoardView extends View {
                     System.out.print(col);
                     if ((col != last.x || row != last.y) && m_points.get(last.x).get(last.y).compareTo(m_points.get(col).get(row)) == 0
                             && (Math.abs(col - last.x) == 1 || Math.abs(row - last.y) == 1)
-                            && dx <= 1 && dy <= 1 && dx != dy
-                            && !PointInPath(col, row)){
+                            && dx <= 1 && dy <= 1 && dx != dy) {
                         m_cellPath.add(new Point(col, row));
                     }
                 }
@@ -188,9 +192,20 @@ public class BoardView extends View {
             m_moving = false;
             snapToGrid(m_circle);
             // count scores here
+            Point curr = new Point();
+            Random r = new Random();
+            for (int row = NUM_CELL-1; row >= 0; --row){
+                for (int col = NUM_CELL-1; col >= 0; --col){
+                    curr.x = col;
+                    curr.y = row;
+                    if (m_cellPath.contains(curr)){
+                        m_points.get(col).remove(row);
+                        m_points.get(col).add(m_colors.get(r.nextInt(m_colors.size() - 1)));
+                        score++;
+                    }
+                }
+            }
             m_cellPath.clear();
-
-            // shift m_points
             invalidate();
         }
 
@@ -211,12 +226,12 @@ public class BoardView extends View {
         animator.removeAllUpdateListeners();
         animator.setDuration(2000);
         animator.setFloatValues(0.0f, 1.0f);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(){
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void  onAnimationUpdate(ValueAnimator animation){
+            public void onAnimationUpdate(ValueAnimator animation) {
                 float ratio = (float) animation.getAnimatedValue();
-                float x = (float)( (1.0 - ratio) * xs + ratio * xt);
-                float y = (float)((1.0 - ratio) * ys + ratio * yt);
+                float x = (float) ((1.0 - ratio) * xs + ratio * xt);
+                float y = (float) ((1.0 - ratio) * ys + ratio * yt);
                 m_circle.offsetTo(x, y);
                 invalidate();
             }

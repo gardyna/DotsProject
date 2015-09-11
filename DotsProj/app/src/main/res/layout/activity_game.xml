@@ -14,5 +14,10 @@
         android:padding="10pt"
         android:layout_margin="10pt"/>
     <!-- TODO: element to handle score counting-->
+    <TextView
+        android:text=""
+        android:id="@+id/currScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
