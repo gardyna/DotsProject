@@ -82,6 +82,7 @@ public class BoardView extends View {
         }
     }
 
+    
     //TODO: speed this upp
     // this funtion come from http://stackoverflow.com/a/13565100 user Xarp
     public void playTone(double freq){
