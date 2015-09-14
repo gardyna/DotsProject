@@ -3,13 +3,12 @@ package com.ru.dots.dotsproj;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.SoundPool;
 
 /**
  * Created by dagur on 9/14/2015.
  */
 public class SoundPlayer {
-
-    //TODO: speed this upp
     // this funtion come from http://stackoverflow.com/a/13565100 user Xarp
     public void playTone(double freq){
         double duration = 0.2f;                // seconds
@@ -28,17 +27,17 @@ public class SoundPlayer {
         // convert to 16 bit pcm sound array
         // assumes the sample buffer is normalised.
         int idx = 0;
-        int i = 0 ;
-        int ramp = numSamples / 20 ;                                    // Amplitude ramp as a percent of sample count
-        for (i = 0; i< ramp; ++i) {                                     // Ramp amplitude up (to avoid clicks)
+        int i = 0;
+        int ramp = numSamples / 20;                                    // Amplitude ramp as a percent of sample count
+        for (i = 0; i < ramp; ++i) {                                     // Ramp amplitude up (to avoid clicks)
             double dVal = sample[i];
             // Ramp up to maximum
-            final short val = (short) ((dVal * 32767 * i/ramp));
+            final short val = (short) ((dVal * 32767 * i / ramp));
             // in 16 bit wav PCM, first byte is the low order byte
             generatedSnd[idx++] = (byte) (val & 0x00ff);
             generatedSnd[idx++] = (byte) ((val & 0xff00) >>> 8);
         }
-        for (i = i; i< numSamples - ramp; ++i) {                        // Max amplitude for most of the samples
+        for (i = i; i < numSamples - ramp; ++i) {                        // Max amplitude for most of the samples
             double dVal = sample[i];
             // scale to maximum amplitude
             final short val = (short) ((dVal * 32767));
@@ -46,10 +45,10 @@ public class SoundPlayer {
             generatedSnd[idx++] = (byte) (val & 0x00ff);
             generatedSnd[idx++] = (byte) ((val & 0xff00) >>> 8);
         }
-        for (i = i; i< numSamples; ++i) {                               // Ramp amplitude down
+        for (i = i; i < numSamples; ++i) {                               // Ramp amplitude down
             double dVal = sample[i];
             // Ramp down to zero
-            final short val = (short) ((dVal * 32767 * (numSamples-i)/ramp ));
+            final short val = (short) ((dVal * 32767 * (numSamples - i) / ramp));
             // in 16 bit wav PCM, first byte is the low order byte
             generatedSnd[idx++] = (byte) (val & 0x00ff);
             generatedSnd[idx++] = (byte) ((val & 0xff00) >>> 8);
@@ -58,22 +57,21 @@ public class SoundPlayer {
         try {
             audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                     sampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO,
-                    AudioFormat.ENCODING_PCM_16BIT, (int)numSamples*2,
+                    AudioFormat.ENCODING_PCM_16BIT, (int) numSamples * 2,
                     AudioTrack.MODE_STATIC);
             audioTrack.write(generatedSnd, 0, generatedSnd.length);     // Load the track
             audioTrack.play();                                          // Play the track
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
 
-        int x =0;
-        do{                                                     // Montior playback to find when done
+        int x = 0;
+        do {                                                     // Montior playback to find when done
             if (audioTrack != null)
                 x = audioTrack.getPlaybackHeadPosition();
             else
                 x = numSamples;
-        }while (x<numSamples);
+        } while (x < numSamples);
 
         if (audioTrack != null) audioTrack.release();
     }
