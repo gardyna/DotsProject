@@ -16,6 +16,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.ToneGenerator;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -48,6 +49,9 @@ public class BoardView extends View {
     private Integer m_movesLeft = 30;
     private SoundPlayer m_sound = new SoundPlayer();
 
+    private Vibrator m_vibrator;
+    private Boolean m_use_vibrator = false;
+
     SharedPreferences sp;
 
     public BoardView(Context context, AttributeSet attrs) {
@@ -70,6 +74,9 @@ public class BoardView extends View {
         //Sækja úr preference hvað grid-ið á að vera stórt
         sp = PreferenceManager.getDefaultSharedPreferences(context);
         NUM_CELL = Integer.parseInt(sp.getString(SettingsActivity.DOTSCOUNT, "6"));
+        m_vibrator = (Vibrator) context.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        m_use_vibrator = sp.getBoolean("vibrate", false);
+
         // create points
         //initialize colors
         Random r = new Random();
@@ -82,7 +89,6 @@ public class BoardView extends View {
             }
         }
     }
-
     @Override
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec ) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -222,6 +228,14 @@ public class BoardView extends View {
                 }
             }
             m_cellPath.clear();
+            if (m_vibrator != null) {
+                try {
+                    if (m_use_vibrator)
+                        m_vibrator.vibrate(200);
+                } catch (Exception e) {
+
+                }
+            }
             invalidate();
             if (m_movesLeft == 0){
                 TinyDB db = new TinyDB(getContext());

@@ -21,4 +21,10 @@
         android:entries="@array/listArray"
         android:entryValues="@array/listValues"/>
 
+    <Preference
+        android:title="Reset High Score"
+        android:summary="Clear the contents of the high score"
+        android:key="resetHighScore" />
+
+
 </PreferenceScreen>
