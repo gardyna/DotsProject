@@ -1,6 +1,5 @@
 package com.ru.dots.dotsproj;
 
-
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
@@ -11,19 +10,27 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.media.AudioFormat;
 import android.media.AudioManager;
-import android.media.AudioTrack;
-import android.media.MediaPlayer;
 import android.media.ToneGenerator;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -54,6 +61,11 @@ public class BoardView extends View {
 
     SharedPreferences sp;
 
+    private ListView m_listView;
+    ArrayList<Record> m_data = new ArrayList<Record>();
+    RecordAdapter m_highscoreRecords;
+    String m_recordName;
+
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setColorArray();
@@ -76,6 +88,23 @@ public class BoardView extends View {
         NUM_CELL = Integer.parseInt(sp.getString(SettingsActivity.DOTSCOUNT, "6"));
         m_vibrator = (Vibrator) context.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         m_use_vibrator = sp.getBoolean("vibrate", false);
+
+        if (NUM_CELL == 6)
+        {
+            m_recordName = "records6.ser";
+        } else {
+            m_recordName = "records9.ser";
+        }
+
+        LayoutInflater inflater =
+                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(R.layout.activity_hiscore, (ViewGroup)getParent(),false);
+        readRecords();
+        m_listView = (ListView) rowView.findViewById(R.id.records);
+        //m_rowscore = (TextView) findViewById(R.id.row_score);
+        //m_rowdate = (TextView) findViewById(R.id.row_date);
+        m_highscoreRecords = new RecordAdapter(this.getContext(), m_data);
+        m_listView.setAdapter(m_highscoreRecords);
 
         // create points
         //initialize colors
@@ -205,7 +234,6 @@ public class BoardView extends View {
                 invalidate();
             }
         }else if (event.getAction() == MotionEvent.ACTION_UP) {
-            // TODO: vibrate on succesful move (if prefrence set)
             m_movesLeft--;
             m_moving = false;
             snapToGrid(m_circle);
@@ -238,10 +266,25 @@ public class BoardView extends View {
             }
             invalidate();
             if (m_movesLeft == 0){
+                /*
                 TinyDB db = new TinyDB(getContext());
                 ArrayList<Integer> scores = db.getListInt("Scores");
                 scores.add(m_score);
                 db.putListInt("Scores", scores);
+                */
+                //String name = m_nameView.getText().toString();
+                //if ( !name.isEmpty() ) {
+                    //boolean cool = m_coolView.isChecked();
+                Date dags = new Date();
+                DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+
+
+                    m_data.add( new Record(df.format(dags), m_score, "#1") );
+                    //m_nameView.setText("");
+                    //m_coolView.setChecked(false);
+                    m_highscoreRecords.notifyDataSetChanged();
+                    writeRecords();
+                //}
                 Intent i = new Intent(getContext(), HomeActivity.class);
                 getContext().startActivity(i);
             }
@@ -279,7 +322,6 @@ public class BoardView extends View {
     }
 
     // Er með array sem heldur utan um litina
-    // Er ekki viss hvort við viljum gera þetta svona
     private void setColorArray(){
         m_colors.add(Color.YELLOW);
         m_colors.add(Color.RED);
@@ -288,4 +330,35 @@ public class BoardView extends View {
         m_colors.add(Color.MAGENTA);
     }
 
+    void writeRecords( ) {
+        try {
+            //FileOutputStream fos = new FileOutputStream( "records.ser" );
+            FileOutputStream fos = getContext().openFileOutput(m_recordName, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject( m_data );
+            oos.close();
+            fos.close();
+        }
+        catch ( IOException e ) {
+            e.printStackTrace();
+        }
+    }
+
+    void readRecords() {
+        try {
+
+            FileInputStream fis = getContext().openFileInput(m_recordName);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            ArrayList<Record> records = (ArrayList) ois.readObject();
+            ois.close();
+            fis.close();
+            m_data.clear();
+            for ( Record rec: records ) {
+                m_data.add( rec );
+            }
+        }
+        catch ( Exception e ) {
+            e.printStackTrace();
+        }
+    }
 }
