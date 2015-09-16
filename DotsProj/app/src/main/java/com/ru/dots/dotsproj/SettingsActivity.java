@@ -35,8 +35,7 @@ public class SettingsActivity extends PreferenceActivity
         resetButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
             public boolean onPreferenceClick(Preference preference) {
-                Toast.makeText(getBaseContext(), "The custom preference has been clicked",
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(getBaseContext(), "The custom preference has been clicked", Toast.LENGTH_LONG).show();
 
                 new AlertDialog.Builder(SettingsActivity.this)
                         .setTitle("Reset high score")

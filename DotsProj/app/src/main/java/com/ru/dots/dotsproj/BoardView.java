@@ -1,7 +1,11 @@
 package com.ru.dots.dotsproj;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -21,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -54,6 +59,7 @@ public class BoardView extends View {
     private Paint m_paint_circle = new Paint();
     private Integer m_score = 0;
     private Integer m_movesLeft = 30;
+    private Integer m_finalScore = 0;
     private SoundPlayer m_sound = new SoundPlayer();
 
     private Vibrator m_vibrator;
@@ -171,6 +177,7 @@ public class BoardView extends View {
         score.setText("Score: " + m_score.toString());
     }
 
+
     private int xToCol(int x){
         return (x - getPaddingLeft()) / m_cell_width;
     }
@@ -279,19 +286,50 @@ public class BoardView extends View {
                 DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
 
-                    m_data.add( new Record(df.format(dags), m_score, "#1") );
+                m_data.add(new Record(df.format(dags), m_score, "#1"));
                     //m_nameView.setText("");
                     //m_coolView.setChecked(false);
                     m_highscoreRecords.notifyDataSetChanged();
                     writeRecords();
                 //}
-                Intent i = new Intent(getContext(), HomeActivity.class);
-                getContext().startActivity(i);
+
+                m_finalScore = m_score;
+
+                //í staðinn fyrir "this"
+                //Activity act = (Activity) getContext();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage(String.valueOf(m_finalScore));
+                builder.setPositiveButton("Play", new Dialog.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Intent i = new Intent(getContext(), GameActivity.class);
+                        getContext().startActivity(i);
+                    }
+                });
+                builder.setNegativeButton("Home", new Dialog.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Intent i = new Intent(getContext(), HomeActivity.class);
+                        getContext().startActivity(i);
+                    }
+
+                });
+                builder.show();
+
+                //Intent i = new Intent(getContext(), HomeActivity.class);
+                //getContext().startActivity(i);
             }
         }
 
         return true;
     }
+
+
+
 
     private boolean PointInPath(int col, int row){
         for (int i = 0; i < m_cellPath.size(); ++i) {
