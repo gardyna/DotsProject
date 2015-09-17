@@ -22,7 +22,10 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/play"
-        android:onClick="viewGame"/>
+        android:onClick="viewGame"
+        android:background="@drawable/buttonshape"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +33,10 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/high_score"
-        android:onClick="GoToScores"/>
+        android:onClick="GoToScores"
+        android:background="@drawable/buttonshape"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,5 +44,8 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/settings"
-        android:onClick="viewSettings"/>
+        android:onClick="viewSettings"
+        android:background="@drawable/buttonshape"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"/>
 </LinearLayout>
