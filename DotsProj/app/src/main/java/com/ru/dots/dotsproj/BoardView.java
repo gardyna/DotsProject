@@ -245,100 +245,104 @@ public class BoardView extends View {
                 invalidate();
             }
         }else if (event.getAction() == MotionEvent.ACTION_UP) {
-            m_movesLeft--;
-            m_moving = false;
-            snapToGrid(m_circle);
-            // count scores here
-            Point curr = new Point();
-            Random r = new Random();
-            for (int col = NUM_CELL-1; col >= 0; --col){
-                int removed = 0;
-                for (int row = NUM_CELL-1; row >= 0; --row){
-                    curr.x = col;
-                    curr.y = row;
-                    if (m_cellPath.contains(curr)){
-                        m_points.get(col).remove(row);
-                        removed++;
-                        m_score++;
+            if (m_cellPath.size()<=1) {
+                m_cellPath.clear();
+            } else {
+                m_movesLeft--;
+                m_moving = false;
+                snapToGrid(m_circle);
+                // count scores here
+                Point curr = new Point();
+                Random r = new Random();
+                for (int col = NUM_CELL-1; col >= 0; --col){
+                    int removed = 0;
+                    for (int row = NUM_CELL-1; row >= 0; --row){
+                        curr.x = col;
+                        curr.y = row;
+                        if (m_cellPath.contains(curr)){
+                            m_points.get(col).remove(row);
+                            removed++;
+                            m_score++;
+                        }
+                    }
+                    for (int i = 0; i<removed; ++i){
+                        m_points.get(col).add(0, m_colors.get(r.nextInt(m_colors.size() - 1)));
                     }
                 }
-                for (int i = 0; i<removed; ++i){
-                    m_points.get(col).add(0, m_colors.get(r.nextInt(m_colors.size() - 1)));
-                }
-            }
-            m_cellPath.clear();
-            if (m_vibrator != null) {
-                try {
-                    if (m_use_vibrator)
-                        m_vibrator.vibrate(200);
-                } catch (Exception e) {
+                m_cellPath.clear();
+                if (m_vibrator != null) {
+                    try {
+                        if (m_use_vibrator)
+                            m_vibrator.vibrate(200);
+                    } catch (Exception e) {
 
+                    }
                 }
-            }
-            invalidate();
-            if (m_movesLeft == 0){
-                /*
-                TinyDB db = new TinyDB(getContext());
-                ArrayList<Integer> scores = db.getListInt("Scores");
-                scores.add(m_score);
-                db.putListInt("Scores", scores);
-                */
-                //String name = m_nameView.getText().toString();
-                //if ( !name.isEmpty() ) {
+                invalidate();
+                if (m_movesLeft == 0) {
+                    /*
+                    TinyDB db = new TinyDB(getContext());
+                    ArrayList<Integer> scores = db.getListInt("Scores");
+                    scores.add(m_score);
+                    db.putListInt("Scores", scores);
+                    */
+                    //String name = m_nameView.getText().toString();
+                    //if ( !name.isEmpty() ) {
                     //boolean cool = m_coolView.isChecked();
-                Date dags = new Date();
-                DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+                    Date dags = new Date();
+                    DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
 
-                m_data.add(new Record(df.format(dags), m_score, "#1"));
+                    m_data.add(new Record(df.format(dags), m_score, "#1"));
                     //m_nameView.setText("");
                     //m_coolView.setChecked(false);
                     m_highscoreRecords.notifyDataSetChanged();
                     writeRecords();
-                //}
+                    //}
 
-                m_finalScore = m_score;
+                    m_finalScore = m_score;
 
-                //í staðinn fyrir "this"
-                Activity activityThis = (Activity) getContext();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                //builder.setMessage(String.valueOf(m_finalScore));
-                TextView myMsg = new TextView(activityThis);
-                myMsg.setText("Game over \nScore: " + String.valueOf(m_finalScore));
-                myMsg.setGravity(Gravity.CENTER);
-                myMsg.setTextColor(Color.parseColor("#0277bd"));
-                myMsg.setTextSize(50);
+                    //í staðinn fyrir "this"
+                    Activity activityThis = (Activity) getContext();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    //builder.setMessage(String.valueOf(m_finalScore));
+                    TextView myMsg = new TextView(activityThis);
+                    myMsg.setText("Game over \nScore: " + String.valueOf(m_finalScore));
+                    myMsg.setGravity(Gravity.CENTER);
+                    myMsg.setTextColor(Color.parseColor("#0277bd"));
+                    myMsg.setTextSize(50);
 
-                builder.setView(myMsg);
-                builder.setPositiveButton("Play", new Dialog.OnClickListener() {
+                    builder.setView(myMsg);
+                    builder.setPositiveButton("Play", new Dialog.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        Intent i = new Intent(getContext(), GameActivity.class);
-                        getContext().startActivity(i);
-                    }
-                });
-                builder.setNegativeButton("Home", new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            Intent i = new Intent(getContext(), GameActivity.class);
+                            getContext().startActivity(i);
+                        }
+                    });
+                    builder.setNegativeButton("Home", new Dialog.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        Intent i = new Intent(getContext(), HomeActivity.class);
-                        getContext().startActivity(i);
-                    }
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            Intent i = new Intent(getContext(), HomeActivity.class);
+                            getContext().startActivity(i);
+                        }
 
-                });
-                AlertDialog a = builder.create();
-                //builder.show();
-                a.show();
-                Button bn = a.getButton(DialogInterface.BUTTON_NEGATIVE);
-                bn.setTextColor(Color.parseColor("#0277bd"));
-                Button bp = a.getButton(DialogInterface.BUTTON_POSITIVE);
-                bp.setTextColor(Color.parseColor("#0277bd"));
+                    });
+                    AlertDialog a = builder.create();
+                    //builder.show();
+                    a.show();
+                    Button bn = a.getButton(DialogInterface.BUTTON_NEGATIVE);
+                    bn.setTextColor(Color.parseColor("#0277bd"));
+                    Button bp = a.getButton(DialogInterface.BUTTON_POSITIVE);
+                    bp.setTextColor(Color.parseColor("#0277bd"));
 
-                //Intent i = new Intent(getContext(), HomeActivity.class);
-                //getContext().startActivity(i);
+                    //Intent i = new Intent(getContext(), HomeActivity.class);
+                    //getContext().startActivity(i);
+                }
             }
         }
 
