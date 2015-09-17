@@ -19,10 +19,12 @@ import android.media.ToneGenerator;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -120,7 +122,7 @@ public class BoardView extends View {
             m_points.add(new ArrayList<Integer>());
             for (int j = 0; j < NUM_CELL; ++j){
                 System.out.println(j);
-                m_points.get(i).add(j, m_colors.get(r.nextInt(m_colors.size() - 1)));
+                m_points.get(i).add(j, m_colors.get(r.nextInt(m_colors.size())));
             }
         }
     }
@@ -296,9 +298,16 @@ public class BoardView extends View {
                 m_finalScore = m_score;
 
                 //í staðinn fyrir "this"
-                //Activity act = (Activity) getContext();
+                Activity activityThis = (Activity) getContext();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage(String.valueOf(m_finalScore));
+                //builder.setMessage(String.valueOf(m_finalScore));
+                TextView myMsg = new TextView(activityThis);
+                myMsg.setText("Game over \nScore: " + String.valueOf(m_finalScore));
+                myMsg.setGravity(Gravity.CENTER);
+                myMsg.setTextColor(Color.parseColor("#0277bd"));
+                myMsg.setTextSize(50);
+
+                builder.setView(myMsg);
                 builder.setPositiveButton("Play", new Dialog.OnClickListener() {
 
                     @Override
@@ -318,7 +327,13 @@ public class BoardView extends View {
                     }
 
                 });
-                builder.show();
+                AlertDialog a = builder.create();
+                //builder.show();
+                a.show();
+                Button bn = a.getButton(DialogInterface.BUTTON_NEGATIVE);
+                bn.setTextColor(Color.parseColor("#0277bd"));
+                Button bp = a.getButton(DialogInterface.BUTTON_POSITIVE);
+                bp.setTextColor(Color.parseColor("#0277bd"));
 
                 //Intent i = new Intent(getContext(), HomeActivity.class);
                 //getContext().startActivity(i);
@@ -361,11 +376,11 @@ public class BoardView extends View {
 
     // Er með array sem heldur utan um litina
     private void setColorArray(){
-        m_colors.add(Color.YELLOW);
-        m_colors.add(Color.RED);
-        m_colors.add(Color.GREEN);
-        m_colors.add(Color.BLUE);
-        m_colors.add(Color.MAGENTA);
+        m_colors.add(Color.parseColor("#ffeb3b")); //YELLOW
+        m_colors.add(Color.parseColor("#f44336")); //RED
+        m_colors.add(Color.parseColor("#8bc34a")); //GREEN
+        m_colors.add(Color.parseColor("#304ffe")); //BLUE
+        m_colors.add(Color.parseColor("#5e35b1")); //Purple
     }
 
     void writeRecords( ) {
