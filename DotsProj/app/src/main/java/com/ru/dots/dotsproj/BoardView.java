@@ -228,10 +228,19 @@ public class BoardView extends View {
                     int col = xToCol(x);
                     int row = yToRow(y);
                     Point last = m_cellPath.get(m_cellPath.size() - 1);
+                    Point nextToLast = new Point();
+                    if (m_cellPath.size() > 1)
+                    {
+                        nextToLast = m_cellPath.get(m_cellPath.size() -2);
+                    }
                     int dx = Math.abs(col - last.x);
                     int dy = Math.abs(row - last.y);
                     System.out.print(col);
-                    if ((col != last.x || row != last.y) && m_points.get(last.x).get(last.y).compareTo(m_points.get(col).get(row)) == 0
+                    if ((nextToLast != null) && (col == nextToLast.x) && (row == nextToLast.y)) {
+                        m_cellPath.remove(m_cellPath.size() - 1);
+                        m_sound.playTone(100 * m_cellPath.size());
+                    } else if ((col != last.x || row != last.y)
+                            && m_points.get(last.x).get(last.y).compareTo(m_points.get(col).get(row)) == 0
                             && (Math.abs(col - last.x) == 1 || Math.abs(row - last.y) == 1)
                             && dx <= 1 && dy <= 1 && dx != dy
                             && (m_cellPath.get(m_cellPath.size()-1).x != col
