@@ -233,7 +233,9 @@ public class BoardView extends View {
                     System.out.print(col);
                     if ((col != last.x || row != last.y) && m_points.get(last.x).get(last.y).compareTo(m_points.get(col).get(row)) == 0
                             && (Math.abs(col - last.x) == 1 || Math.abs(row - last.y) == 1)
-                            && dx <= 1 && dy <= 1 && dx != dy) {
+                            && dx <= 1 && dy <= 1 && dx != dy
+                            && (m_cellPath.get(m_cellPath.size()-1).x != col
+                            || m_cellPath.get(m_cellPath.size()-1).y != row)) {
                         m_cellPath.add(new Point(col, row));
                         m_sound.playTone(100 * m_cellPath.size());
                         //m_toneGen.startTone(m_tones.get(m_cellPath.size()), 200);

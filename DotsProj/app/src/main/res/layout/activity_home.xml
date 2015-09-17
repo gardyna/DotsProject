@@ -7,8 +7,12 @@
 
     <TextView
         android:text="Dots"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:typeface="monospace"
+        android:textColor="#FF0000"
+        android:textSize="50.5dp"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
