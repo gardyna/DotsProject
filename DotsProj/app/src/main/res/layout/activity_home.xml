@@ -13,8 +13,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:typeface="monospace"
-        android:textColor="#FF0000"
-        android:textSize="50.5dp"/>
+        android:textColor="#F44336"
+        android:textSize="50.5dp"
+        android:textStyle="bold"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

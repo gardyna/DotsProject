@@ -33,12 +33,6 @@ public class HiscoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hiscore);
-        //TinyDB db = new TinyDB(this);
-        //scores = db.getListInt("Scores");
-        //Collections.sort(scores, Collections.reverseOrder());
-        //ListView v = (ListView)findViewById(R.id.scoreList);
-        //ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, scores);
-        //v.setAdapter(adapter);
 
         sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         NUM_CELL = Integer.parseInt(sp.getString(SettingsActivity.DOTSCOUNT, "6"));
@@ -61,8 +55,6 @@ public class HiscoreActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        //readRecords();
-        //m_highscoreRecords.notifyDataSetChanged();
     }
 
     @Override

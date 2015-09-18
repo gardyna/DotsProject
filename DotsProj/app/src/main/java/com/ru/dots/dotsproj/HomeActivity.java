@@ -11,43 +11,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 public class HomeActivity extends AppCompatActivity {
-
-    private Vibrator m_vibrator;
-    private Boolean m_use_vibrator = false;
-    private Boolean m_have_sound = false;
-
-    SharedPreferences m_sp;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        m_vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        m_sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        m_use_vibrator = m_sp.getBoolean("vibrate", false);
-        m_have_sound = m_sp.getBoolean("sound", false);
-        TinyDB db = new TinyDB(this);
-        List<Integer> scores =db.getListInt("Scores");
-        if ( scores == null || scores.isEmpty()){
-            db.putListInt("Scores", new ArrayList<Integer>(Arrays.asList(10, 20, 30, 40 , 50)));
-        }
-
-
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        m_use_vibrator = m_sp.getBoolean("vibrate", false);
-
     }
 
     @Override

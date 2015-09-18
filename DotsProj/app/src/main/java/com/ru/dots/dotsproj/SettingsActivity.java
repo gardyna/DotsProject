@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-
-import android.widget.Toast;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -35,7 +32,6 @@ public class SettingsActivity extends PreferenceActivity
         resetButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
             public boolean onPreferenceClick(Preference preference) {
-                //Toast.makeText(getBaseContext(), "The custom preference has been clicked", Toast.LENGTH_LONG).show();
 
                 new AlertDialog.Builder(SettingsActivity.this)
                         .setTitle("Reset high score")
@@ -52,8 +48,6 @@ public class SettingsActivity extends PreferenceActivity
 
         });
     }
-
-
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -77,13 +71,8 @@ public class SettingsActivity extends PreferenceActivity
     }
 
     private void resetHighScore() {
-        //TinyDB db = new TinyDB(getApplicationContext());
-        //ArrayList<Integer> scores = db.getListInt("Scores");
-        //scores.clear();
-        //db.putListInt("Scores", scores);
 
         try {
-            //FileOutputStream fos = new FileOutputStream( "records.ser" );
             ArrayList<Record> temp = new ArrayList<Record>();
             FileOutputStream fos = openFileOutput("records6.ser", Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);

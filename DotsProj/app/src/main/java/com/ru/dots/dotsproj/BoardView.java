@@ -27,8 +27,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -99,6 +97,7 @@ public class BoardView extends View {
         m_use_vibrator = sp.getBoolean("vibrate", false);
         m_use_sound = sp.getBoolean("sound", false);
 
+        //sitthvor skráin miðað við mismunadi punktafjölda
         if (NUM_CELL == 6)
         {
             m_recordName = "records6.ser";
@@ -111,8 +110,6 @@ public class BoardView extends View {
         View rowView = inflater.inflate(R.layout.activity_hiscore, (ViewGroup)getParent(),false);
         readRecords();
         m_listView = (ListView) rowView.findViewById(R.id.records);
-        //m_rowscore = (TextView) findViewById(R.id.row_score);
-        //m_rowdate = (TextView) findViewById(R.id.row_date);
         m_highscoreRecords = new RecordAdapter(this.getContext(), m_data);
         m_listView.setAdapter(m_highscoreRecords);
 
@@ -180,7 +177,6 @@ public class BoardView extends View {
         movesLeft.setText("Moves: " + m_movesLeft.toString());
         score.setText("Score: " + m_score.toString());
     }
-
 
     private int xToCol(int x){
         return (x - getPaddingLeft()) / m_cell_width;
@@ -250,7 +246,6 @@ public class BoardView extends View {
                             || m_cellPath.get(m_cellPath.size()-1).y != row)) {
                         m_cellPath.add(new Point(col, row));
                         if(m_use_sound){ m_sound.playTone(100 * m_cellPath.size()); }
-                        //m_toneGen.startTone(m_tones.get(m_cellPath.size()), 200);
                     }
                 }
                 m_circle.offsetTo(x, y);
@@ -292,32 +287,18 @@ public class BoardView extends View {
                 }
                 invalidate();
                 if (m_movesLeft == 0) {
-                    /*
-                    TinyDB db = new TinyDB(getContext());
-                    ArrayList<Integer> scores = db.getListInt("Scores");
-                    scores.add(m_score);
-                    db.putListInt("Scores", scores);
-                    */
-                    //String name = m_nameView.getText().toString();
-                    //if ( !name.isEmpty() ) {
-                    //boolean cool = m_coolView.isChecked();
                     Date dags = new Date();
                     DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
-
                     m_data.add(new Record(df.format(dags), m_score, "#1"));
-                    //m_nameView.setText("");
-                    //m_coolView.setChecked(false);
                     m_highscoreRecords.notifyDataSetChanged();
                     writeRecords();
-                    //}
 
                     m_finalScore = m_score;
 
                     //í staðinn fyrir "this"
                     Activity activityThis = (Activity) getContext();
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    //builder.setMessage(String.valueOf(m_finalScore));
                     TextView myMsg = new TextView(activityThis);
                     myMsg.setText("Game over \nScore: " + String.valueOf(m_finalScore));
                     myMsg.setGravity(Gravity.CENTER);
@@ -345,51 +326,16 @@ public class BoardView extends View {
 
                     });
                     AlertDialog a = builder.create();
-                    //builder.show();
                     a.show();
                     Button bn = a.getButton(DialogInterface.BUTTON_NEGATIVE);
                     bn.setTextColor(Color.parseColor("#0277bd"));
                     Button bp = a.getButton(DialogInterface.BUTTON_POSITIVE);
                     bp.setTextColor(Color.parseColor("#0277bd"));
-
-                    //Intent i = new Intent(getContext(), HomeActivity.class);
-                    //getContext().startActivity(i);
                 }
             }
         }
 
         return true;
-    }
-
-
-
-
-    private boolean PointInPath(int col, int row){
-        for (int i = 0; i < m_cellPath.size(); ++i) {
-            Point curr = m_cellPath.get(i);
-            if (col == curr.x && row == curr.y){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void animateMovement(final float xs, final float ys, final float xt, final float yt){
-        animator.removeAllUpdateListeners();
-        animator.setDuration(2000);
-        animator.setFloatValues(0.0f, 1.0f);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float ratio = (float) animation.getAnimatedValue();
-                float x = (float) ((1.0 - ratio) * xs + ratio * xt);
-                float y = (float) ((1.0 - ratio) * ys + ratio * yt);
-                m_circle.offsetTo(x, y);
-                invalidate();
-            }
-        });
-
-        animator.start();
     }
 
     // Er með array sem heldur utan um litina
