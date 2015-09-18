@@ -105,7 +105,9 @@ public class HiscoreActivity extends AppCompatActivity {
             Collections.reverse(m_data);
             ArrayList<Record> temp = new ArrayList<Record>();
             int i = 1;
+            int maxEntries = 10; // max number of entries to show
             for ( Record rec: m_data ) {
+                if (i > maxEntries) { break; }
                 rec.setNumber("#" + i);
                 temp.add(rec);
                 i++;
