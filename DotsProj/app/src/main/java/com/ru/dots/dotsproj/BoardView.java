@@ -168,6 +168,13 @@ public class BoardView extends View {
             for (int i = 1; i < m_cellPath.size(); ++i){
                 point = m_cellPath.get(i);
                 m_path.lineTo(colToX(point.x) + m_cell_width/2, rowToY(point.y) + m_cell_height /2);
+                m_rect.set(colToX(point.x)-m_cell_width/2,rowToY(point.y)-m_cell_height/2,
+                            colToX(point.x)- m_cell_width/2, rowToY(point.y)- m_cell_height/2);
+                m_rect.offset(getPaddingLeft(), getPaddingTop());
+                //m_rect.inset(m_cell_width * 0.05f, m_cell_height * 0.05f);
+                m_paint.setColor(m_points.get(point.x).get(point.y));
+                m_paint.setAlpha(50);
+                canvas.drawOval(m_rect, m_paint);
             }
             canvas.drawPath(m_path, m_paintPath);
         }
