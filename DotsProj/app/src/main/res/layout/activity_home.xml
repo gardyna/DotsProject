@@ -8,7 +8,7 @@
     tools:context=".HomeActivity">
 
     <TextView
-        android:text="Dots"
+        android:text="@string/GameName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

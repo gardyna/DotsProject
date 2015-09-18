@@ -66,6 +66,7 @@ public class BoardView extends View {
 
     private Vibrator m_vibrator;
     private Boolean m_use_vibrator = false;
+    private Boolean m_use_sound = false;
 
     SharedPreferences sp;
 
@@ -96,6 +97,7 @@ public class BoardView extends View {
         NUM_CELL = Integer.parseInt(sp.getString(SettingsActivity.DOTSCOUNT, "6"));
         m_vibrator = (Vibrator) context.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         m_use_vibrator = sp.getBoolean("vibrate", false);
+        m_use_sound = sp.getBoolean("sound", false);
 
         if (NUM_CELL == 6)
         {
@@ -221,7 +223,8 @@ public class BoardView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN){
             m_moving = true;
             m_cellPath.add(new Point(xToCol(x), yToRow(y)));
-            m_sound.playTone(100);
+            m_paintPath.setColor(m_points.get(xToCol(x)).get(yToRow(y)));
+            if(m_use_sound){ m_sound.playTone(100); }
         }else if (event.getAction() == MotionEvent.ACTION_MOVE){
             if (m_moving){
                 if (!m_cellPath.isEmpty()){
@@ -238,7 +241,7 @@ public class BoardView extends View {
                     System.out.print(col);
                     if ((nextToLast != null) && (col == nextToLast.x) && (row == nextToLast.y)) {
                         m_cellPath.remove(m_cellPath.size() - 1);
-                        m_sound.playTone(100 * m_cellPath.size());
+                        if(m_use_sound){ m_sound.playTone(100 * m_cellPath.size()); }
                     } else if ((col != last.x || row != last.y)
                             && m_points.get(last.x).get(last.y).compareTo(m_points.get(col).get(row)) == 0
                             && (Math.abs(col - last.x) == 1 || Math.abs(row - last.y) == 1)
@@ -246,7 +249,7 @@ public class BoardView extends View {
                             && (m_cellPath.get(m_cellPath.size()-1).x != col
                             || m_cellPath.get(m_cellPath.size()-1).y != row)) {
                         m_cellPath.add(new Point(col, row));
-                        m_sound.playTone(100 * m_cellPath.size());
+                        if(m_use_sound){ m_sound.playTone(100 * m_cellPath.size()); }
                         //m_toneGen.startTone(m_tones.get(m_cellPath.size()), 200);
                     }
                 }
