@@ -165,13 +165,18 @@ public class BoardView extends View {
             m_path.reset();
             Point point = m_cellPath.get(0);
             m_path.moveTo(colToX(point.x) + m_cell_width/2, rowToY(point.y) + m_cell_height/2);
+            m_rect.set(colToX(point.x),rowToY(point.y),
+                    colToX(point.x)+ m_cell_width, rowToY(point.y)+ m_cell_height);
+            m_rect.inset(m_cell_width * 0.01f, m_cell_height * 0.01f);
+            m_paint.setColor(m_points.get(point.x).get(point.y));
+            m_paint.setAlpha(50);
+            canvas.drawOval(m_rect, m_paint);
             for (int i = 1; i < m_cellPath.size(); ++i){
                 point = m_cellPath.get(i);
                 m_path.lineTo(colToX(point.x) + m_cell_width/2, rowToY(point.y) + m_cell_height /2);
-                m_rect.set(colToX(point.x)-m_cell_width/2,rowToY(point.y)-m_cell_height/2,
-                            colToX(point.x)- m_cell_width/2, rowToY(point.y)- m_cell_height/2);
-                m_rect.offset(getPaddingLeft(), getPaddingTop());
-                //m_rect.inset(m_cell_width * 0.05f, m_cell_height * 0.05f);
+                m_rect.set(colToX(point.x),rowToY(point.y),
+                            colToX(point.x)+ m_cell_width, rowToY(point.y)+ m_cell_height);
+                m_rect.inset(m_cell_width * 0.01f, m_cell_height * 0.01f);
                 m_paint.setColor(m_points.get(point.x).get(point.y));
                 m_paint.setAlpha(50);
                 canvas.drawOval(m_rect, m_paint);

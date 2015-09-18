@@ -1,8 +1,5 @@
 package com.ru.dots.dotsproj;
 
-// TODO: set date along with score
-// TODO: two lists one for each board size
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Vibrator;
